@@ -1,0 +1,34 @@
+name: Agent Tests
+on: 
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install TestMu A2A CLI
+        run: pip install testmu-a2a-cli
+
+      - name: Run agent tests
+        env:
+          TESTMU_USERNAME: ${{ secrets.TESTMU_USERNAME }}
+          TESTMU_ACCESS_KEY: ${{ secrets.TESTMU_ACCESS_KEY }}
+        run: |
+          testmu-a2a test \
+            --agent ${{ vars.AGENT_ENDPOINT }} \
+            --spec "Customer support chatbot" \
+            --count 10 \
+            --format junit \
+            --output results.xml
+
+      - name: Publish results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Agent Test Results
+          path: results.xml
+          reporter: java-junit
