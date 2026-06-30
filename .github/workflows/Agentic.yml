@@ -1,5 +1,5 @@
 name: Agent Tests
-on: 
+on: workflow_dispatch
 
 jobs:
   test:
