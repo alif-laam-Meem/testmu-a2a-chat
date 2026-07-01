@@ -1,4 +1,4 @@
-name: View chat Results
+name: View Chat Results
 on: workflow_dispatch
 
 jobs:
