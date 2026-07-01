@@ -1,0 +1,39 @@
+agent:
+  endpoint: "https://my-bot.com/api/chat"
+  type: chat
+  method: POST
+  headers:
+    Content-Type: "application/json"
+  body_template:
+    message: "{{message}}"
+  response_path: "data.reply"
+
+scenarios:
+  from: ./Scenarios/active-scenarios.csv
+  fields:
+    title: title
+    description: description
+    persona: persona
+    expected_outcomes: expected_outcomes
+    test_profile: test_profile
+    interaction_mode: interaction_mode
+    special_instructions: special_instructions
+    first_message: first_message
+
+evaluation:
+  thresholds:
+    accuracy: 0.80
+    relevance: 0.80
+    coherence: 0.80
+    context_retention: 0.75
+  max_turns: 10
+  output_format: table
+
+security:
+  enabled: true
+  intensity: intermediate
+  categories:
+    - prompt-injection
+    - jailbreak
+    - pii-leakage
+    - data-exfiltration

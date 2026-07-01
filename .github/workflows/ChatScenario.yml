@@ -3,21 +3,12 @@ name: Run Chat Scenario
 on:
   workflow_dispatch:
     inputs:
-      project_id:
-        description: 'TestMu project ID'
-        required: true
-        default: '2a54a65a-ce32-4137-91ca-bb36550ecbe9'
-      workflow_id:
-        description: 'Workflow ID to run the scenario against'
-        required: true
-      scenario:
-        description: 'Chat scenario description'
-        required: true
-        default: 'Customer support chatbot'
-      count:
-        description: 'Number of chat conversations to run'
+      category:
+        description: 'Scenario category to run (e.g. security, intent-recognition). Leave blank to run all.'
         required: false
-        default: '10'
+      endpoint_profile:
+        description: 'Endpoint profile ID to override agent config (optional)'
+        required: false
 
 jobs:
   run-chat-scenario:
@@ -32,25 +23,48 @@ jobs:
       - name: Install TestMu A2A CLI
         run: pip install testmu-a2a-cli
 
+      - name: Filter enabled scenarios
+        run: |
+          python - <<'EOF'
+          import csv
+
+          src = "testmu/Scenarios/premera-chat-scenarios.csv"
+          dst = "testmu/Scenarios/active-scenarios.csv"
+
+          with open(src, newline="", encoding="utf-8") as f:
+              rows = list(csv.DictReader(f))
+
+          enabled = [r for r in rows if r.get("enabled", "").strip().lower() == "true"]
+
+          if not enabled:
+              raise SystemExit("No scenarios have enabled=true. Nothing to run.")
+
+          with open(dst, "w", newline="", encoding="utf-8") as f:
+              writer = csv.DictWriter(f, fieldnames=rows[0].keys())
+              writer.writeheader()
+              writer.writerows(enabled)
+
+          print(f"Running {len(enabled)} of {len(rows)} scenarios.")
+          EOF
+
       - name: Run chat scenario
         env:
           TESTMU_USERNAME: ${{ secrets.TESTMU_USERNAME }}
           TESTMU_ACCESS_KEY: ${{ secrets.TESTMU_ACCESS_KEY }}
         run: |
           testmu-a2a run \
-            --project ${{ github.event.inputs.project_id }} \
-            --workflow ${{ github.event.inputs.workflow_id }} \
-            --spec "${{ github.event.inputs.scenario }}" \
-            --count ${{ github.event.inputs.count }} \
+            --config testmu/testmu-a2a.yaml \
+            ${{ github.event.inputs.category && format('--category {0}', github.event.inputs.category) || '' }} \
+            ${{ github.event.inputs.endpoint_profile && format('--endpoint-profile {0}', github.event.inputs.endpoint_profile) || '' }} \
             --format junit \
-            --output results.xml
+            --output testmu/reports/results.xml
 
       - name: Publish results
         uses: dorny/test-reporter@v1
         if: always()
         with:
           name: Chat Scenario Results
-          path: results.xml
+          path: testmu/reports/results.xml
           reporter: java-junit
 
       - name: Upload results artifact
@@ -58,4 +72,4 @@ jobs:
         if: always()
         with:
           name: chat-scenario-results
-          path: results.xml
+          path: testmu/reports/results.xml
