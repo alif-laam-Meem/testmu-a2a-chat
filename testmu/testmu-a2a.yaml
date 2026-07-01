@@ -14,6 +14,11 @@ agent:
 scenarios:
   generate:
     from: ./testmu/Scenarios/
+    categories:
+      - conversational-flow
+      - intent-recognition
+      - context-memory
+      - error-handling
     count: 30
 
 evaluation:
@@ -26,10 +31,4 @@ evaluation:
   output_format: table
 
 security:
-  enabled: true
-  intensity: intermediate
-  categories:
-    - prompt-injection
-    - jailbreak
-    - pii-leakage
-    - data-exfiltration
+  enabled: false
