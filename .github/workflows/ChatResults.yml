@@ -1,4 +1,4 @@
-name: Agent Tests
+name: View chat Results
 on: workflow_dispatch
 
 jobs:
