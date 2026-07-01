@@ -13,7 +13,7 @@ agent:
 
 scenarios:
   generate:
-    from: ./Scenarios/
+    from: ./testmu/Scenarios/
     count: 30
 
 evaluation:
