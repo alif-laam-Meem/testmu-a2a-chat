@@ -2,7 +2,7 @@ name: View chat Results
 on: workflow_dispatch
 
 jobs:
-  test:
+  view-chat-results:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
