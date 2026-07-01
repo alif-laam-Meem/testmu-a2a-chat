@@ -13,7 +13,7 @@ agent:
 
 scenarios:
   generate:
-    from: ./testmu/Scenarios/
+    from: ./testmu/scenarios/
     categories:
       - conversational-flow
       - intent-recognition

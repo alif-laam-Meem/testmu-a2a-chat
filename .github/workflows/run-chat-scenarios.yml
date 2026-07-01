@@ -28,8 +28,8 @@ jobs:
           python - <<'EOF'
           import csv
 
-          src = "testmu/Scenarios/premera-chat-scenarios.csv"
-          dst = "testmu/Scenarios/active-scenarios.csv"
+          src = "testmu/scenarios/premera-chat-scenarios.csv"
+          dst = "testmu/scenarios/active-scenarios.csv"
 
           with open(src, newline="", encoding="utf-8") as f:
               rows = list(csv.DictReader(f))
@@ -58,7 +58,7 @@ jobs:
           TESTMU_ACCESS_KEY: ${{ secrets.TESTMU_ACCESS_KEY }}
         run: |
           testmu-a2a run \
-            --config testmu/testmu-a2a.yaml \
+            --config testmu/config/testmu-a2a.yaml \
             ${{ github.event.inputs.category && format('--category {0}', github.event.inputs.category) || '' }} \
             ${{ github.event.inputs.endpoint_profile && format('--endpoint-profile {0}', github.event.inputs.endpoint_profile) || '' }} \
             --format junit \
