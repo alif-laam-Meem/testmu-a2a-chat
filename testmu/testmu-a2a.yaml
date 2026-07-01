@@ -12,16 +12,9 @@ agent:
   response_path: "data.reply"
 
 scenarios:
-  from: ./Scenarios/active-scenarios.csv
-  fields:
-    title: title
-    description: description
-    persona: persona
-    expected_outcomes: expected_outcomes
-    test_profile: test_profile
-    interaction_mode: interaction_mode
-    special_instructions: special_instructions
-    first_message: first_message
+  generate:
+    from: ./Scenarios/
+    count: 30
 
 evaluation:
   thresholds:
