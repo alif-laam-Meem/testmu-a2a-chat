@@ -13,8 +13,13 @@ jobs:
       - name: Install TestMu A2A CLI
         run: pip install testmu-a2a-cli
 
-      - name: Run agent tests
+      - name: View Agent Results
         env:
           TESTMU_USERNAME: ${{ secrets.TESTMU_USERNAME }}
           TESTMU_ACCESS_KEY: ${{ secrets.TESTMU_ACCESS_KEY }}
         run: |
+          testmu-a2a results \
+            -p 2a54a65a-ce32-4137-91ca-bb36550ecbe9 \
+            -f table \
+            --output results.txt \
+            fbab002e-438f-4ec9-a5fe-fb351050d801
