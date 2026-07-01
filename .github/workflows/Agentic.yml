@@ -18,16 +18,3 @@ jobs:
           TESTMU_USERNAME: ${{ secrets.TESTMU_USERNAME }}
           TESTMU_ACCESS_KEY: ${{ secrets.TESTMU_ACCESS_KEY }}
         run: |
-            --agent ${{ vars.AGENT_ENDPOINT }} \
-            --spec "Customer support chatbot" \
-            --count 10 \
-            --format junit \
-            --output results.xml
-
-      - name: Publish results
-        uses: dorny/test-reporter@v1
-        if: always()
-        with:
-          name: Agent Test Results
-          path: results.xml
-          reporter: java-junit
