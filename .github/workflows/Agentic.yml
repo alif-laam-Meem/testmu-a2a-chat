@@ -18,7 +18,6 @@ jobs:
           TESTMU_USERNAME: ${{ secrets.TESTMU_USERNAME }}
           TESTMU_ACCESS_KEY: ${{ secrets.TESTMU_ACCESS_KEY }}
         run: |
-          testmu-a2a test \
             --agent ${{ vars.AGENT_ENDPOINT }} \
             --spec "Customer support chatbot" \
             --count 10 \
