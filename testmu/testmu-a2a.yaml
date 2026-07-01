@@ -1,5 +1,5 @@
 agent:
-  endpoint: "https://my-bot.com/api/chat"
+  endpoint: "https://api.vapi.ai/chat"
   type: chat
   method: POST
   headers:
