@@ -1,0 +1,61 @@
+name: Run Chat Scenario
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_id:
+        description: 'TestMu project ID'
+        required: true
+        default: '2a54a65a-ce32-4137-91ca-bb36550ecbe9'
+      workflow_id:
+        description: 'Workflow ID to run the scenario against'
+        required: true
+      scenario:
+        description: 'Chat scenario description'
+        required: true
+        default: 'Customer support chatbot'
+      count:
+        description: 'Number of chat conversations to run'
+        required: false
+        default: '10'
+
+jobs:
+  run-chat-scenario:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install TestMu A2A CLI
+        run: pip install testmu-a2a-cli
+
+      - name: Run chat scenario
+        env:
+          TESTMU_USERNAME: ${{ secrets.TESTMU_USERNAME }}
+          TESTMU_ACCESS_KEY: ${{ secrets.TESTMU_ACCESS_KEY }}
+        run: |
+          testmu-a2a run \
+            --project ${{ github.event.inputs.project_id }} \
+            --workflow ${{ github.event.inputs.workflow_id }} \
+            --spec "${{ github.event.inputs.scenario }}" \
+            --count ${{ github.event.inputs.count }} \
+            --format junit \
+            --output results.xml
+
+      - name: Publish results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Chat Scenario Results
+          path: results.xml
+          reporter: java-junit
+
+      - name: Upload results artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chat-scenario-results
+          path: results.xml
