@@ -47,6 +47,16 @@ jobs:
           print(f"Running {len(enabled)} of {len(rows)} scenarios.")
           EOF
 
+      - name: Debug API response
+        env:
+          TESTMU_USERNAME: ${{ secrets.TESTMU_USERNAME }}
+          TESTMU_ACCESS_KEY: ${{ secrets.TESTMU_ACCESS_KEY }}
+        run: |
+          curl -s -X POST https://agent-testing.lambdatest.com/api/projects \
+            -u "$TESTMU_USERNAME:$TESTMU_ACCESS_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"debug-run","description":"debug","agent_type":"chat"}' | python3 -m json.tool
+
       - name: Run chat scenario
         env:
           TESTMU_USERNAME: ${{ secrets.TESTMU_USERNAME }}
