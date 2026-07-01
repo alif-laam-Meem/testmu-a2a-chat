@@ -1,3 +1,6 @@
+project:
+  id: "2a54a65a-ce32-4137-91ca-bb36550ecbe9"
+
 agent:
   endpoint: "https://api.vapi.ai/chat"
   type: chat
