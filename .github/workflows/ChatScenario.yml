@@ -57,7 +57,8 @@ jobs:
             ${{ github.event.inputs.category && format('--category {0}', github.event.inputs.category) || '' }} \
             ${{ github.event.inputs.endpoint_profile && format('--endpoint-profile {0}', github.event.inputs.endpoint_profile) || '' }} \
             --format junit \
-            --output testmu/reports/results.xml
+            --output testmu/reports/results.xml \
+            --verbose
 
       - name: Publish results
         uses: dorny/test-reporter@v1
